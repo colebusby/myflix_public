@@ -8,12 +8,9 @@ describe Video do
     Video.first.description.should == "Heroes in a half-shell!"
   end
 
-  it "has many categories" do
-    video = Video.create(title: "TNMT", description: "Heroes in a half-shell!", small_cover_url: "www.tnmt.com", large_cover_url: "www.imdb.com")
-    Category.create(name: "cat1")
-    Category.create(name: "cat2")
-    Categorization.create(video_id: 1, category_id: 1)
-    Categorization.create(video_id: 1, category_id: 2)
-    Video.first.categories.count.should == 2
-  end
+  it { should have_many(:categories).through(:categorizations) }
+
+  it { should validate_presence_of(:title) }
+
+  it { should validate_presence_of(:description)}
 end
