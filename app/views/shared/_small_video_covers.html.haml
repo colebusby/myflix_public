@@ -1,0 +1,4 @@
+- obj.each do |video|
+  .video.span2
+    = link_to video, nil do
+      %img(src="/#{video.small_cover_url}")

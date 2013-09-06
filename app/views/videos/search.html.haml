@@ -1,0 +1,9 @@
+%section.genre
+  %header.clearfix
+    %h1= "Results for '#{params[:search]}'"
+  %article.row
+    - if @results.empty?
+      .span4
+        %h1 No videos found! Please try another search.
+    -else
+      = render '/shared/small_video_covers', obj: @results
