@@ -3,4 +3,4 @@
     %header
       %h3= link_to category.name, category_path(category)
     .videos.row
-      = render '/shared/small_video_covers', obj: category.videos
+      = render '/shared/small_video_covers', obj: category.recently_added

@@ -1,7 +1,11 @@
 class VideosController < ApplicationController
 
   def index
-    @videos = Video.all
+    if signed_in?
+      @videos = Video.all
+    else
+      require_user
+    end
   end
 
   def show
