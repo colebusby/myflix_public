@@ -12,8 +12,7 @@ describe Category do
       sample = Category.create(name: 'sample')
       i = 1
       6.times do
-        video = Video.create(title: "movie#{i}", description: "a movie")
-        video.categories << sample
+        video = Video.create(title: "movie#{i}", description: "a movie", categories: [sample])
         i += 1
       end
       sample.recently_added[0].created_at.should > sample.recently_added[1].created_at
@@ -23,8 +22,7 @@ describe Category do
       sample = Category.create(name: 'sample')
       i = 1
       8.times do
-        video = Video.create(title: "movie#{i}", description: "a movie")
-        video.categories << sample
+        video = Video.create(title: "movie#{i}", description: "a movie", categories: [sample])
         i += 1
       end
       sample.recently_added.count.should == 6
@@ -33,11 +31,10 @@ describe Category do
       sample = Category.create(name: 'sample')
       i = 1
       4.times do
-        video = Video.create(title: "movie#{i}", description: "a movie")
-        video.categories << sample
+        video = Video.create(title: "movie#{i}", description: "a movie", categories: [sample])
         i += 1
       end
-      sample.recently_added.count.should == sample.videos.all.count
+      sample.recently_added.count.should == sample.videos.count
     end
   end
 end
