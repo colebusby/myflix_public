@@ -8,6 +8,8 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.0.3'
 gem 'bcrypt-ruby', '= 3.0.1'
 gem 'bootstrap_form'
+gem 'fabrication'
+gem 'faker'
 ruby '1.9.3'
 
 group :development do

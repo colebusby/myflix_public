@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
   def require_user
     unless signed_in?
       flash[:info] = "Please sign in to access that feature."
-      redirect_to root_path
+      redirect_to signin_path
     end
   end
 

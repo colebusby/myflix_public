@@ -1,11 +1,8 @@
 class VideosController < ApplicationController
+  before_action :require_user
 
   def index
-    if signed_in?
-      @videos = Video.all
-    else
-      require_user
-    end
+    @videos = Video.all
   end
 
   def show
@@ -15,5 +12,4 @@ class VideosController < ApplicationController
   def search
     @results = Video.search_by_title(params[:search])
   end
-
 end
