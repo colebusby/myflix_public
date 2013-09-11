@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   def index
-    redirect_to home_path if signed_in?
+    redirect_to home_path if current_user
   end
 
   def new
