@@ -47,3 +47,11 @@ Categorization.create(video_id: 12, category_id: 3)
 Categorization.create(video_id: 13, category_id: 3)
 Categorization.create(video_id: 14, category_id: 1)
 Categorization.create(video_id: 15, category_id: 1)
+
+15.times { Fabricate(:user) }
+
+Video.all.each do |video|
+  User.all.each do |user|
+    Fabricate(:rating, video_id: video.id, user_id: user.id)
+  end
+end
