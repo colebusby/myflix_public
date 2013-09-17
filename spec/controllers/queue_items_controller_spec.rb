@@ -69,9 +69,44 @@ describe QueueItemsController do
       post :create, video_id: movie1.id
       expect(lisa.queue_items.count).to eq(1)
     end
+
     it "redirects to sign in for unauthenticated users" do
       video = Fabricate(:video)
       post :create, video_id: video.id
+      expect(response).to redirect_to signin_path
+    end
+  end
+
+  describe "DELETE destroy" do
+    it "deletes queue item for authenticated user" do
+      lisa = Fabricate(:user)
+      session[:user_id] = lisa
+      queue_item = Fabricate(:queue_item, user: lisa)
+      delete :destroy, id: queue_item.id
+      expect(QueueItem.count).to eq(0)
+    end
+
+    it "redirects to my queue path" do
+      lisa = Fabricate(:user)
+      session[:user_id] = lisa
+      queue_item = Fabricate(:queue_item, user: lisa)
+      delete :destroy, id: queue_item.id
+      expect(response).to redirect_to my_queue_path
+    end
+
+    it "does not delete queue items that belongs to other users" do
+      lisa = Fabricate(:user)
+      alice = Fabricate(:user)
+      queue_item1 = Fabricate(:queue_item, user: lisa)
+      queue_item2 = Fabricate(:queue_item, user: alice)
+      session[:user_id] = lisa
+      delete :destroy, id: queue_item2.id
+      expect(QueueItem.count).to eq(2)
+    end
+
+    it "redirects to sign in path for unauthenticated user" do
+      queue_item = Fabricate(:queue_item)
+      delete :destroy, id: queue_item.id
       expect(response).to redirect_to signin_path
     end
   end
