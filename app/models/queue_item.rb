@@ -23,7 +23,9 @@ class QueueItem < ActiveRecord::Base
     video.categories.first
   end
 
-  def self.update_queue_items(@queue_item_data)
+  def self.update_queue_items(queue_item_data, current_user)
+    @queue_item_data = queue_item_data
+    @current_user = current_user
     if unique_positions? && only_integers? && belongs_to_current_user?
       new_queue_position_numbers
       normalize_position_numbers
@@ -40,7 +42,7 @@ class QueueItem < ActiveRecord::Base
   end
 
   def self.normalize_position_numbers
-    current_user.queue_items.each_with_index do |queue_item, index|
+    @current_user.queue_items.each_with_index do |queue_item, index|
       queue_item.update_attributes(position: index + 1)
     end
   end
@@ -56,6 +58,6 @@ class QueueItem < ActiveRecord::Base
 
   def self.belongs_to_current_user?
     users = @queue_item_data.map { |item_data| QueueItem.find(item_data["id"]).user }
-    users.length == users.reject { |u| u != current_user }.length
+    users.length == users.reject { |u| u != @current_user }.length
   end
 end

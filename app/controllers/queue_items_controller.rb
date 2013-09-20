@@ -18,7 +18,7 @@ class QueueItemsController < ApplicationController
   end
 
   def update_queue
-    QueueItem.update_queue_items(params[:queue_items])
+    QueueItem.update_queue_items(params[:queue_items], current_user)
     redirect_to my_queue_path
   end
 
