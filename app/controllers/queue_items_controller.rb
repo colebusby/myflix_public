@@ -19,7 +19,7 @@ class QueueItemsController < ApplicationController
 
   def update_queue
     @queue_items = params[:queue_items]
-    if unique_positions? && only_integers?
+    if unique_positions? && only_integers? && belongs_to_current_user?
       new_queue_position_numbers
       normalize_position_numbers
     end
@@ -60,5 +60,10 @@ class QueueItemsController < ApplicationController
   def only_integers?
     positions = @queue_items.map { |queue_item| queue_item[:position]  }
     positions.length == positions.map(&:to_i).reject {|i| i==0}.length
+  end
+
+  def belongs_to_current_user?
+    users = @queue_items.map { |queue_item_data| QueueItem.find(queue_item_data["id"]).user }
+    users.length == users.reject { |u| u != current_user }.length
   end
 end
