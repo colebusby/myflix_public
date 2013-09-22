@@ -113,7 +113,9 @@ describe QueueItemsController do
   end
 
   describe "POST update_queue" do
+
     context "with valid inputs" do
+
       it "redirect_to my queue" do
         lisa = Fabricate(:user)
         session[:user_id] = lisa.id
@@ -139,6 +141,25 @@ describe QueueItemsController do
         queue_item2 = Fabricate(:queue_item, user: lisa, position: 2)
         post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 2}]
         expect(lisa.queue_items.map(&:position)).to eq([1, 2])
+      end
+
+      it "creates new rating rate when Not Rated" do
+        lisa = Fabricate(:user)
+        session[:user_id] = lisa.id
+        movie1 = Fabricate(:video)
+        queue_item1 = Fabricate(:queue_item, user: lisa, video: movie1, position: 1)
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 1, rate: 4}]
+        expect(lisa.ratings.count).to eq(1)
+      end
+
+      it "assigns new rating rate to existing ratings" do
+        lisa = Fabricate(:user)
+        session[:user_id] = lisa.id
+        movie1 = Fabricate(:video)
+        rating1 = Fabricate(:rating, user: lisa, video: movie1, rate: 3, description: "a movie review")
+        queue_item1 = Fabricate(:queue_item, user: lisa, video: movie1, position: 1)
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 1, rate: 4}]
+        expect(lisa.ratings[0].rate).to eq(4)
       end
     end
 

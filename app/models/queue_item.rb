@@ -11,7 +11,7 @@ class QueueItem < ActiveRecord::Base
     if rating
       rating.rate
     else
-      "Not Rated"
+      0
     end
   end
 
@@ -29,6 +29,7 @@ class QueueItem < ActiveRecord::Base
     if unique_positions? && only_integers? && belongs_to_current_user?
       new_queue_position_numbers
       normalize_position_numbers
+      new_queue_video_rate
     end
   end
 
@@ -59,5 +60,18 @@ class QueueItem < ActiveRecord::Base
   def self.belongs_to_current_user?
     users = @queue_item_data.map { |item_data| QueueItem.find(item_data["id"]).user }
     users.length == users.reject { |u| u != @current_user }.length
+  end
+
+  def self.new_queue_video_rate
+    @queue_item_data.each do |item_data|
+      queue_item = QueueItem.find(item_data["id"])
+      rating = Rating.find_by(user_id: @current_user.id, video_id: queue_item.video_id)
+      if rating && item_data["rate"] != "0"
+        rating.update_attribute('rate', item_data["rate"].to_i)
+      elsif item_data["rate"] != "0"
+        new_rating = Rating.new(user_id: @current_user.id, video_id: queue_item.video_id, rate: item_data["rate"].to_i,)
+        new_rating.save(validate: false)
+      end
+    end
   end
 end
