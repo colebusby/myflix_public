@@ -139,49 +139,39 @@ describe QueueItemsController do
         session[:user_id] = lisa.id
         queue_item1 = Fabricate(:queue_item, user: lisa, position: 1)
         queue_item2 = Fabricate(:queue_item, user: lisa, position: 2)
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 2}]
-        expect(lisa.queue_items.map(&:position)).to eq([1, 2])
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 1}]
+        expect(lisa.queue_items.last.position).to eq(2)
       end
 
-      it "creates new rating rate when Not Rated" do
-        lisa = Fabricate(:user)
-        session[:user_id] = lisa.id
-        movie1 = Fabricate(:video)
-        queue_item1 = Fabricate(:queue_item, user: lisa, video: movie1, position: 1)
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 1, rate: 4}]
-        expect(lisa.ratings.count).to eq(1)
-      end
-
-      it "assigns new rating rate to existing ratings" do
-        lisa = Fabricate(:user)
-        session[:user_id] = lisa.id
-        movie1 = Fabricate(:video)
-        rating1 = Fabricate(:rating, user: lisa, video: movie1, rate: 3, description: "a movie review")
-        queue_item1 = Fabricate(:queue_item, user: lisa, video: movie1, position: 1)
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 1, rate: 4}]
-        expect(lisa.ratings[0].rate).to eq(4)
-      end
     end
 
     context "with invalid inputs" do
 
-      it "makes no changes if the same number is input more than once" do
+      it "redirects to my queue page" do
         lisa = Fabricate(:user)
         session[:user_id] = lisa.id
         queue_item1 = Fabricate(:queue_item, user: lisa, position: 1)
         queue_item2 = Fabricate(:queue_item, user: lisa, position: 2)
-        queue_item3 = Fabricate(:queue_item, user: lisa, position: 3)
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 3}, {id: queue_item3.id, position: 1}]
-        expect(lisa.queue_items).to eq([queue_item1, queue_item2, queue_item3])
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 2.5}, {id: queue_item2.id, position: 1}]
+        expect(response).to redirect_to my_queue_path
       end
 
-      it "makes no changes if non-integer is entered" do
+      it "sets the fash error message" do
         lisa = Fabricate(:user)
         session[:user_id] = lisa.id
         queue_item1 = Fabricate(:queue_item, user: lisa, position: 1)
         queue_item2 = Fabricate(:queue_item, user: lisa, position: 2)
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: "d"}]
-        expect(lisa.queue_items).to eq([queue_item1, queue_item2])
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 2.5}, {id: queue_item2.id, position: 1}]
+        expect(flash[:error]).to be_present
+      end
+
+      it "does not change the queue items" do
+        lisa = Fabricate(:user)
+        session[:user_id] = lisa.id
+        queue_item1 = Fabricate(:queue_item, user: lisa, position: 1)
+        queue_item2 = Fabricate(:queue_item, user: lisa, position: 2)
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 2.1}]
+        expect(lisa.queue_items.first.position).to eq(1)
       end
     end
 
@@ -195,16 +185,17 @@ describe QueueItemsController do
     end
 
     context "with other user's queue" do
+
       it "makes no changes to current user's queue" do
         lisa = Fabricate(:user)
-        alice = Fabricate(:user)
         session[:user_id] = lisa.id
-        queue_item1 = Fabricate(:queue_item, user: lisa, position: 1)
+        alice = Fabricate(:user)
+        queue_item1 = Fabricate(:queue_item, user: alice, position: 1)
         queue_item2 = Fabricate(:queue_item, user: lisa, position: 2)
-        queue_item3 = Fabricate(:queue_item, user: alice, position: 3)
-        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: "2"}, {id: queue_item3.id, position: "1"}]
-        expect(lisa.queue_items).to eq([queue_item1, queue_item2])
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 2}]
+        expect(queue_item1.reload.position).to eq(1)
       end
+
     end
   end
 end

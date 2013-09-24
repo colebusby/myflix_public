@@ -3,6 +3,7 @@ require 'spec_helper'
 describe QueueItem do
   it { should belong_to(:user) }
   it { should belong_to(:video) }
+  it { should validate_numericality_of(:position).only_integer }
 
   describe "#video_title" do
     it "returns the title of the associated video" do
@@ -20,16 +21,34 @@ describe QueueItem do
       queue_item = Fabricate(:queue_item, user: user, video: video)
       expect(queue_item.rate).to eq(4)
     end
-    it "returns 'Not Rated' when the rating is not present" do
+    it "returns nil when the rating is not present" do
       video = Fabricate(:video)
       user = Fabricate(:user)
       queue_item = Fabricate(:queue_item, user: user, video: video)
-      expect(queue_item.rate).to eq('Not Rated')
+      expect(queue_item.rate).to eq(nil)
+    end
+  end
+
+  describe "#rate=(new_rate)" do
+    it "changes the rate if rating already exists" do
+      video = Fabricate(:video)
+      user = Fabricate(:user)
+      rating = Fabricate(:rating, video: video, user: user, rate: 4)
+      queue_item = Fabricate(:queue_item, video: video, user: user)
+      queue_item.rate = 2
+      expect(Rating.first.rate).to eq(2)
+    end
+    it "creates a rating with rate if rating does not exist" do
+      video = Fabricate(:video)
+      user = Fabricate(:user)
+      queue_item = Fabricate(:queue_item, video: video, user: user)
+      queue_item.rate = 2
+      expect(Rating.first.rate).to eq(2)
     end
   end
 
   describe "#category_name" do
-    it "returns one of the category names of video" do
+    it "returns first category name of video" do
       video = Fabricate(:video)
       comedy = Fabricate(:category, name: "Comedy")
       video.categories << comedy
