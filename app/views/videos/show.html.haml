@@ -14,9 +14,9 @@
 %section.reviews.container
   .row
     .span10.offset1
-      - if @user_rating == nil
-        = bootstrap_form_for([@video, @rating]) do |f|
-          = f.select :rate, options_for_video_rates, label: 'Rate this video'
+      - if @user_review == nil
+        = bootstrap_form_for([@video, @review]) do |f|
+          = f.select :rating, options_for_video_rates, label: 'Rate this video'
           = f.text_area :description, label: 'Write a review', class: 'span6', rows: 6
           = f.secondary "Submit"
           = link_to "Cancel", @video
@@ -26,19 +26,19 @@
         %article.review
           .row
             .span2
-              %span= "Rating: #{@user_rating.rate} / 5"
+              %span= "Rating: #{@user_review.rating} / 5"
               %p= "by #{current_user.username}"
             .span8
-              %p= "#{@user_rating.description}"
+              %p= "#{@user_review.description}"
       %br
       %header
-        %h3= "User Reviews (#{@video.ratings.count})"
+        %h3= "User Reviews (#{@video.reviews.count})"
       %ul
-        - @ratings.order("created_at DESC").each do |rating|
+        - @reviews.order("created_at DESC").each do |rating|
           %article.review
             %li.row
               .span2
-                %span= "Rating: #{rating.rate} / 5"
-                %p= "by #{User.find(rating.user_id).username}"
+                %span= "Rating: #{review.rating} / 5"
+                %p= "by #{User.find(review.user_id).username}"
               .span8
-                %p= rating.description
+                %p= review.description

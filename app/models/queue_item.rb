@@ -8,16 +8,16 @@ class QueueItem < ActiveRecord::Base
     video.title
   end
 
-  def rate
-    rating.rate if rating
+  def rating
+    review.rating if review
   end
 
-  def rate=(new_rate)
-    if rating
-      rating.update_column(:rate, new_rate)
+  def rating=(new_rating)
+    if review
+      review.update_column(:rating, new_rating)
     else
-      new_rating = Rating.new(user: user, video: video, rate: new_rate)
-      new_rating.save(validate: false)
+      new_review = Review.new(user: user, video: video, rating: new_rating)
+      new_review.save(validate: false)
     end
   end
 
@@ -31,8 +31,8 @@ class QueueItem < ActiveRecord::Base
 
   private
 
-  def rating
-    @rating ||= Rating.where(user_id: user.id, video_id: video.id).first
+  def review
+    @review ||= Review.where(user_id: user.id, video_id: video.id).first
   end
 
 end

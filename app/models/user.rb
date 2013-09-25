@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  has_many :ratings
+  has_many :reviews
   has_many :queue_items, order: :position
 
   has_secure_password validations: false
