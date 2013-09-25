@@ -3,24 +3,27 @@ require 'spec_helper'
 describe VideosController do
   describe "GET show" do
     context "for authenticated users" do
+
+      let(:video) { Fabricate(:video) }
+      let(:lisa) { Fabricate(:user) }
+      let(:review1) { Fabricate(:review, video: video, user: lisa) }
+      let(:review2) { Fabricate(:review, video: video) }
+
       before do
-        session[:user_id] = Fabricate(:user).id
-        @video = Fabricate(:video)
-        @rating1 = Fabricate(:rating, video_id: @video.id)
-        @rating2 = Fabricate(:rating, video_id: @video.id)
-        get :show, id: @video.id
+        session[:user_id] = lisa.id
+        get :show, id: video.id
       end
 
       it "sets @video" do
-        expect(assigns(:video)).to eq(@video)
+        expect(assigns(:video)).to eq(video)
       end
 
-      it "sets @rating to new instance" do
-        expect(assigns(:rating)).to be_instance_of(Rating)
+      it "sets @review to new instance" do
+        expect(assigns(:review)).to be_instance_of(Review)
       end
 
-      it "sets @ratings" do
-        expect(assigns(:ratings)).to match_array [@rating1, @rating2]
+      it "sets @reviews" do
+        expect(assigns(:reviews)).to match_array [review1, review2]
       end
     end
 

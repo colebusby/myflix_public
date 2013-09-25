@@ -9,13 +9,17 @@ module ApplicationHelper
   end
 
   def average_rating
-    if @video.ratings.count == 0
+    if @video.reviews.count == 0
       star_rating(0.0)
     else
       i = 0
-      @video.ratings.each { |rating| i += rating.rate }
-      star_rating(round_point5(i / @video.ratings.count))
+      @video.reviews.each { |review| i += review.rating }
+      star_rating(round_point5(i / @video.reviews.count))
     end
+  end
+
+  def options_for_video_ratings(selected=nil)
+    options_for_select([ ['5 Stars', 5], ['4 Stars', 4], ['3 Stars', 3], ['2 Stars', 2], ['1 Star', 1], ['Not Rated', nil] ], selected)
   end
 
 end

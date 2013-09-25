@@ -2,39 +2,27 @@ require 'spec_helper'
 
 describe Category do
   it { should have_many(:videos).through(:categorizations) }
-
   it { validate_presence_of(:name) }
-
   it { validate_uniqueness_of(:name) }
 
-  describe "recently added videos" do
-    it "orders videos by most recent" do
-      sample = Category.create(name: 'sample')
-      i = 1
-      6.times do
-        video = Video.create(title: "movie#{i}", description: "a movie", categories: [sample])
-        i += 1
-      end
-      sample.recently_added[0].created_at.should > sample.recently_added[1].created_at
-      sample.recently_added[1].created_at.should > sample.recently_added[2].created_at
+  describe "#recently_added" do
+
+    let(:comedy) { Fabricate(:category, name: 'comedy') }
+
+    it "orders recently added videos by most recent" do
+      monk = Fabricate(:video, created_at: 1.day.ago, categories: [comedy])
+      psych = Fabricate(:video, categories: [comedy])
+      expect(comedy.recently_added.first).to eq(psych)
     end
+
     it "selects a maximum of 6 videos" do
-      sample = Category.create(name: 'sample')
-      i = 1
-      8.times do
-        video = Video.create(title: "movie#{i}", description: "a movie", categories: [sample])
-        i += 1
-      end
-      sample.recently_added.count.should == 6
+      Fabricate.times(8, :video, categories: [comedy])
+      comedy.recently_added.count.should == 6
     end
+
     it "selects all videos if less than 6 available" do
-      sample = Category.create(name: 'sample')
-      i = 1
-      4.times do
-        video = Video.create(title: "movie#{i}", description: "a movie", categories: [sample])
-        i += 1
-      end
-      sample.recently_added.count.should == sample.videos.count
+      Fabricate.times(4, :video, categories: [comedy])
+      comedy.recently_added.count.should == comedy.videos.count
     end
   end
 end

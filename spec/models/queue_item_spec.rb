@@ -3,6 +3,7 @@ require 'spec_helper'
 describe QueueItem do
   it { should belong_to(:user) }
   it { should belong_to(:video) }
+  it { should validate_numericality_of(:position).only_integer }
 
   describe "#video_title" do
     it "returns the title of the associated video" do
@@ -12,24 +13,42 @@ describe QueueItem do
     end
   end
 
-  describe "#rate" do
-    it "returns the rate from the rating when the rating is present" do
+  describe "#rating" do
+    it "returns the rating from the review when the review is present" do
       video = Fabricate(:video)
       user = Fabricate(:user)
-      rating = Fabricate(:rating, user: user, video: video, rate: 4)
+      rating = Fabricate(:review, user: user, video: video, rating: 4)
       queue_item = Fabricate(:queue_item, user: user, video: video)
-      expect(queue_item.rate).to eq(4)
+      expect(queue_item.rating).to eq(4)
     end
-    it "returns 'Not Rated' when the rating is not present" do
+    it "returns nil when the review is not present" do
       video = Fabricate(:video)
       user = Fabricate(:user)
       queue_item = Fabricate(:queue_item, user: user, video: video)
-      expect(queue_item.rate).to eq('Not Rated')
+      expect(queue_item.rating).to eq(nil)
+    end
+  end
+
+  describe "#rating=(new_rating)" do
+    it "changes the rating if review already exists" do
+      video = Fabricate(:video)
+      user = Fabricate(:user)
+      review = Fabricate(:review, video: video, user: user, rating: 4)
+      queue_item = Fabricate(:queue_item, video: video, user: user)
+      queue_item.rating = 2
+      expect(Review.first.rating).to eq(2)
+    end
+    it "creates a review with rating if review does not exist" do
+      video = Fabricate(:video)
+      user = Fabricate(:user)
+      queue_item = Fabricate(:queue_item, video: video, user: user)
+      queue_item.rating = 2
+      expect(Review.first.rating).to eq(2)
     end
   end
 
   describe "#category_name" do
-    it "returns one of the category names of video" do
+    it "returns first category name of video" do
       video = Fabricate(:video)
       comedy = Fabricate(:category, name: "Comedy")
       video.categories << comedy

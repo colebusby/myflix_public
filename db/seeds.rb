@@ -52,6 +52,6 @@ Categorization.create(video_id: 15, category_id: 1)
 
 Video.all.each do |video|
   User.all.each do |user|
-    Fabricate(:rating, video_id: video.id, user_id: user.id)
+    Fabricate(:review, video_id: video.id, user_id: user.id)
   end
 end

@@ -18,13 +18,14 @@ describe SessionsController do
   describe 'POST create' do
     context "user sign in validates" do
 
+      let(:lisa) { Fabricate(:user) }
+
       before do
-        @lisa = Fabricate(:user)
-        post :create, email: @lisa.email, password: @lisa.password
+        post :create, email: lisa.email, password: lisa.password
       end
 
       it "sets session to user.id" do
-        expect(session[:user_id]).to eq(@lisa.id)
+        expect(session[:user_id]).to eq(lisa.id)
       end
 
       it "redirects to home path" do
@@ -34,9 +35,10 @@ describe SessionsController do
 
     context "user sign in does not validate" do
 
+      let(:lisa) { Fabricate(:user) }
+
       before do
-        @lisa = Fabricate(:user)
-        post :create, password: @lisa.password
+        post :create, password: lisa.password
       end
 
       it "renders the new template" do
