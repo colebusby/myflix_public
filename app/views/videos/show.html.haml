@@ -16,7 +16,7 @@
     .span10.offset1
       - if @user_review == nil
         = bootstrap_form_for([@video, @review]) do |f|
-          = f.select :rating, options_for_video_rates, label: 'Rate this video'
+          = f.select :rating, options_for_video_ratings, label: 'Rate this video'
           = f.text_area :description, label: 'Write a review', class: 'span6', rows: 6
           = f.secondary "Submit"
           = link_to "Cancel", @video
@@ -34,7 +34,7 @@
       %header
         %h3= "User Reviews (#{@video.reviews.count})"
       %ul
-        - @reviews.order("created_at DESC").each do |rating|
+        - @reviews.order("created_at DESC").each do |review|
           %article.review
             %li.row
               .span2

@@ -41,10 +41,9 @@ describe VideosController do
       post :search, search: 'nity'
       expect(assigns(:results)).to eq([serenity])
     end
-    it "redirects users to signin page for unathenticated users" do
-      serenity = Fabricate(:video, title: 'Serenity')
-      post :search, search: 'nity'
-      expect(response).to redirect_to signin_path
-    end
+
+      it_behaves_like "require_sign_in" do
+        let(:action) { post :search }
+      end
   end
 end

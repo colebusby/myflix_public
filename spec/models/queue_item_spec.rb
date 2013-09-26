@@ -14,6 +14,7 @@ describe QueueItem do
   end
 
   describe "#rating" do
+
     it "returns the rating from the review when the review is present" do
       video = Fabricate(:video)
       user = Fabricate(:user)
@@ -21,6 +22,7 @@ describe QueueItem do
       queue_item = Fabricate(:queue_item, user: user, video: video)
       expect(queue_item.rating).to eq(4)
     end
+
     it "returns nil when the review is not present" do
       video = Fabricate(:video)
       user = Fabricate(:user)
@@ -30,6 +32,7 @@ describe QueueItem do
   end
 
   describe "#rating=(new_rating)" do
+
     it "changes the rating if review already exists" do
       video = Fabricate(:video)
       user = Fabricate(:user)
@@ -38,6 +41,7 @@ describe QueueItem do
       queue_item.rating = 2
       expect(Review.first.rating).to eq(2)
     end
+
     it "creates a review with rating if review does not exist" do
       video = Fabricate(:video)
       user = Fabricate(:user)
@@ -48,6 +52,7 @@ describe QueueItem do
   end
 
   describe "#category_name" do
+
     it "returns first category name of video" do
       video = Fabricate(:video)
       comedy = Fabricate(:category, name: "Comedy")
@@ -58,6 +63,7 @@ describe QueueItem do
   end
 
   describe "#category" do
+
     it "returns category object" do
       video = Fabricate(:video)
       category = Fabricate(:category, name: "Comedy")
