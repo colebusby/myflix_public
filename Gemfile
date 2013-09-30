@@ -10,13 +10,8 @@ gem 'bcrypt-ruby', '= 3.0.1'
 gem 'bootstrap_form'
 gem 'fabrication'
 gem 'faker'
+gem 'sqlite3'
 ruby '1.9.3'
-
-group :development do
-  gem 'sqlite3'
-  gem 'pry'
-  gem 'pry-nav'
-end
 
 group :production do
   gem 'pg'
@@ -25,6 +20,16 @@ end
 gem 'jquery-rails'
 
 group :test, :development do
+  gem 'pry'
+  gem 'pry-nav'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'meta_request'
+end
+
+group :test do
+  gem 'capybara'
+  gem 'launchy'
 end
