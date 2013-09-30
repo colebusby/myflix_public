@@ -6,9 +6,9 @@ feature 'signing in' do
 
   scenario 'sign in by registed user' do
     visit signin_path
-    fill_in 'Email Address' :with =>'lisa@fakemail.com'
-    fill_in 'Password' :with => 'password'
+    fill_in 'Email Address', :with =>'lisa@fakemail.com'
+    fill_in 'Password', :with => 'password'
     click_button 'Sign in'
-    expect(response).to redirect_to home_path
+    expect(page).to have_content 'Welcome, Lisa'
   end
 end
