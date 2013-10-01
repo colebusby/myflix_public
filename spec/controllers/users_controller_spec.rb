@@ -9,7 +9,7 @@ describe UsersController do
   end
 
   describe "POST create" do
-    context "@user.save validates" do
+    context "with authenticated user" do
       before {post :create, user: Fabricate.attributes_for(:user)}
       it "saves user" do
         expect(User.count).to eq(1)
@@ -21,7 +21,7 @@ describe UsersController do
         expect(response).to redirect_to home_path
       end
     end
-    context "@user.save does not validate" do
+    context "without authenticated user" do
       before do
         User.create(email: '123@gmail.com', username: Faker::Name.name, password: 'password')
         post :create, user: { email: '123@gmail.com', username: Faker::Name.name, password: 'password' }
@@ -34,6 +34,40 @@ describe UsersController do
       end
       it "sets @user" do
         expect(assigns(:user)).to be_instance_of(User)
+      end
+    end
+  end
+
+  describe "GET show" do
+    context "with authenticated user" do
+
+      before { set_current_user }
+
+      it "renders show page of selected user" do
+        lisa = current_user
+        get :show, id: lisa.id
+        expect(response).to render_template :show
+      end
+
+      it "sets @user to selected user when selected is current user" do
+        lisa = current_user
+        get :show, id: lisa.id
+        expect(assigns(:user)).to eq(lisa)
+      end
+
+      it "sets @user to selected user when selected is not current user" do
+        lisa = current_user
+        alice = Fabricate(:user)
+        get :show, id: alice.id
+        expect(assigns(:user)).to eq(alice)
+      end
+    end
+    context "without authenticated user" do
+
+      it "should redirect to sign in page" do
+        alice = Fabricate(:user)
+        get :show, id: alice.id
+        expect(response).to redirect_to signin_path
       end
     end
   end
