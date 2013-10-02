@@ -17,5 +17,5 @@
           %td.extra-padding= relationship.leader.queue_items.count
           %td.extra-padding= relationship.leader.leading_relationships.count
           %td.extra-padding
-            = link_to relationship, method: :delete do
+            = link_to relationship, id: "remove #{relationship.leader.username}", method: :delete do
               %i.icon-remove
