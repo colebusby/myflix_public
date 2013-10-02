@@ -10,6 +10,7 @@ gem 'bcrypt-ruby', '= 3.0.1'
 gem 'bootstrap_form'
 gem 'fabrication'
 gem 'faker'
+gem 'rails_12factor'
 ruby '1.9.3'
 
 group :production do
