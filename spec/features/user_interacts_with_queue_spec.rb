@@ -30,7 +30,7 @@ feature 'user interacts with queue items' do
     expect(page).to have_content 'Monk'
     expect(page).to have_content 'Continuum'
 
-    fill_in "video_#{firefly.id}", with: '8'
+    fill_in "video_#{firefly.id}", with: '9'
     fill_in "video_#{monk.id}", with: '2'
     fill_in "video_#{continuum.id}", with: '5'
     click_button 'Update Instant Queue'
