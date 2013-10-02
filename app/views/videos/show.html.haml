@@ -39,6 +39,6 @@
             %li.row
               .span2
                 %span= "Rating: #{review.rating} / 5"
-                %p= "by #{User.find(review.user_id).username}"
+                %p= review_writer(review)
               .span8
                 %p= review.description

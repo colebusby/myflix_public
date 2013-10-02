@@ -1,0 +1,40 @@
+%section.user.container
+  .row
+    .span10.offset1
+      %article
+        %header
+          = image_tag avatar_url(@user)
+          %h2= "#{@user.username}'s video collections (#{@user.queue_items_count})"
+          = link_to "Follow", relationships_path(leader_id: @user.id), class: "btn", method: :post unless Relationship.find_by(leader_id: @user.id, follower_id: current_user.id) || @user == current_user
+        - unless @user.queue_items_count == 0
+          %table.table
+            %thead
+              %tr
+                %th(width="30%") Video Title
+                %th(width="15%") Genre
+            %tbody
+              - @user.queue_items.each do |queue_item|
+                %tr
+                  %td
+                    = link_to queue_item.video_title, queue_item.video
+                  %td
+                    = link_to queue_item.category_name, queue_item.category
+
+%section.user_reviews.container
+  .row
+    .span10.offset1
+      %header
+        %h3= "#{@user.username}'s Reviews (#{@user.reviews_count})"
+      %ul
+        - @user.reviews.each do |review|
+          %article.review
+            %li.row
+              .span2
+                %p
+                  = link_to review.video_title, review.video
+                %span= "Rating: #{review.rating} / 5"
+              .span8
+                - if review.description == nil
+                  %p No Review Written
+                - else
+                  %p= review.description
