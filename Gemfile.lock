@@ -61,6 +61,9 @@ GEM
     fabrication (2.8.0)
     faker (1.2.0)
       i18n (~> 0.5)
+    figaro (0.7.0)
+      bundler (~> 1.0)
+      rails (>= 3, < 5)
     haml (4.0.3)
       tilt
     haml-rails (0.4)
@@ -75,6 +78,8 @@ GEM
       thor (>= 0.14, < 2.0)
     launchy (2.3.0)
       addressable (~> 2.3)
+    letter_opener (1.1.2)
+      launchy (~> 2.2)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -189,9 +194,11 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   fabrication
   faker
+  figaro
   haml-rails
   jquery-rails
   launchy
+  letter_opener
   meta_request
   pg
   pry
