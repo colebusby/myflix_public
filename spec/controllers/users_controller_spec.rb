@@ -14,26 +14,51 @@ describe UsersController do
       it "saves user" do
         expect(User.count).to eq(1)
       end
+
       it "sets session with new user id" do
         expect(session[:user_id]).to eq(User.last.id)
       end
+
       it "redirects to home path" do
         expect(response).to redirect_to home_path
       end
     end
+
     context "without authenticated user" do
       before do
         User.create(email: '123@gmail.com', username: Faker::Name.name, password: 'password')
         post :create, user: { email: '123@gmail.com', username: Faker::Name.name, password: 'password' }
       end
+
       it "does not save @user" do
         expect(User.count).to eq(1)
       end
+
       it "renders :new template" do
         expect(response).to render_template :new
       end
+
       it "sets @user" do
         expect(assigns(:user)).to be_instance_of(User)
+      end
+    end
+
+    context "sending email" do
+      after { ActionMailer::Base.deliveries.clear }
+
+      it "sends out email to the user with valid inputs" do
+        post(:create, user: { email: "lisa@example.com", password: "password", username: "Lisa" })
+        expect(ActionMailer::Base.deliveries.last.to).to eq(["lisa@example.com"])
+      end
+
+      it "send out email containing the user's name with valid inputs" do
+        post(:create, user: { email: "lisa@example.com", password: "password", username: "Lisa" })
+        expect(ActionMailer::Base.deliveries.last.body).to include("Lisa")
+      end
+
+      it "does not send email with invalid inputs" do
+        post(:create, user: { email: "lisa@example.com", username: "Lisa" })
+        expect(ActionMailer::Base.deliveries.count).to eq(0)
       end
     end
   end
