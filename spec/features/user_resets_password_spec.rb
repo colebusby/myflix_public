@@ -9,7 +9,7 @@ feature "user resets password" do
     click_button 'Send Email'
 
     open_email(lisa.email)
-    current_email.click_link('Reset Password')
+    current_email.click_link("Reset Password")
 
     fill_in 'New Password', with: 'new_password'
     click_button 'Reset Password'
