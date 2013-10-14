@@ -57,6 +57,7 @@ describe PasswordResetsController do
         post :create, token: lisa.token, password: 'new_password'
         expect(flash[:success]).to eq("Password successfully changed! Please sing in.")
       end
+
       it "resets user token" do
         lisa = Fabricate(:user, password: 'old_password')
         lisa.update_column(:token, '12345')
@@ -64,6 +65,7 @@ describe PasswordResetsController do
         expect(lisa.reload.token).not_to eq('12345')
       end
     end
+
     context "with invalid token" do
       it "redirects to expired token page" do
         post :create, token: '12346', password: 'new_password'

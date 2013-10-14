@@ -5,3 +5,9 @@ shared_examples "require_sign_in" do
     expect(response).to redirect_to signin_path
   end
 end
+
+shared_examples "generates_token" do
+  it "generates a rondom token when object is created" do
+    expect(object.token).to be_present
+  end
+end

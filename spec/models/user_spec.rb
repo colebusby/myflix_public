@@ -10,8 +10,7 @@ describe User do
 
   it { should validate_uniqueness_of(:email) }
 
-  it 'generates a random token when user is created' do
-    lisa = Fabricate(:user)
-    expect(lisa.token).to be_present
+  it_behaves_like "generates_token" do
+    let(:object) { Fabricate(:user) }
   end
 end

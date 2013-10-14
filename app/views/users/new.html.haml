@@ -8,5 +8,6 @@
           = f.text_field :email, label: 'Email Address'
           = f.password_field :password
           = f.text_field :username, label: 'Full Name'
+          = hidden_field_tag :invitation_token, @invitation_token
           = f.actions do
             = f.secondary "Sign Up"

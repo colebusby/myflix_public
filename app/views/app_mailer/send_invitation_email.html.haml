@@ -1,0 +1,6 @@
+!!! 5
+%html(lang="en-US")
+  %body
+    %p= "#{@invitation.inviter.username} sent you the following message:"
+    %p= @invitation.message
+    %p= link_to "Sign up today!", register_with_token_url(@invitation.token), class: 'btn'

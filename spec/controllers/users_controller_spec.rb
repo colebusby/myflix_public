@@ -22,6 +22,30 @@ describe UsersController do
       it "redirects to home path" do
         expect(response).to redirect_to home_path
       end
+
+      it "makes the user follow the inviter" do
+        lisa = Fabricate(:user)
+        invitation = Fabricate(:invitation, inviter: lisa, recipient_email: 'alice@example.com')
+        post :create, user: {email: 'alice@example.com', password: 'password', username: 'Alice'}, invitation_token: invitation.token
+        alice = User.where(email: 'alice@example.com').first
+        expect(alice.follows?(lisa)).to be_true
+      end
+
+      it "makes the inviter follow the user" do
+        lisa = Fabricate(:user)
+        invitation = Fabricate(:invitation, inviter: lisa, recipient_email: 'alice@example.com')
+        post :create, user: {email: 'alice@example.com', password: 'password', username: 'Alice'}, invitation_token: invitation.token
+        alice = User.where(email: 'alice@example.com').first
+        expect(lisa.follows?(alice)).to be_true
+      end
+
+      it "expires the invitation upon registration" do
+        lisa = Fabricate(:user)
+        invitation = Fabricate(:invitation, inviter: lisa, recipient_email: 'alice@example.com', token: '12345')
+        post :create, user: {email: 'alice@example.com', password: 'password', username: 'Alice'}, invitation_token: invitation.token
+        alice = User.where(email: 'alice@example.com').first
+        expect(invitation.token).to_not eq('12345')
+      end
     end
 
     context "without authenticated user" do
@@ -94,6 +118,27 @@ describe UsersController do
         get :show, id: alice.id
         expect(response).to redirect_to signin_path
       end
+    end
+  end
+
+  describe "GET new_with_invitation_token" do
+
+    it "renders register(new) page" do
+      invitation = Fabricate(:invitation)
+      get :new_with_invitation_token, token: invitation.token
+      expect(response).to render_template :new
+    end
+
+    it "assigns user email with recipients email" do
+      invitation = Fabricate(:invitation)
+      get :new_with_invitation_token, token: invitation.token
+      expect(assigns(:user).email).to eq(invitation.recipient_email)
+    end
+
+    it "redirects to expired token page for invalid tokens" do
+      invitation = Fabricate(:invitation)
+      get :new_with_invitation_token, token: '12345'
+      expect(response).to redirect_to expired_token_path
     end
   end
 end
