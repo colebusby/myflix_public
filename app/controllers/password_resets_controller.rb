@@ -1,7 +1,7 @@
 class PasswordResetsController < ApplicationController
 
   def show
-    user = User.find_by_token(params[:id])
+    user = User.where(token: params[:id]).first
     if user
       @token = user.token
     else
@@ -10,7 +10,7 @@ class PasswordResetsController < ApplicationController
   end
 
   def create
-    user = User.find_by_token(params[:token])
+    user = User.where(token: params[:token]).first
     if user
       if params[:password].blank?
         flash[:error] = "Password cannot be blank."
