@@ -8,7 +8,7 @@ class InvitationsController < ApplicationController
   def create
     @invitation = Invitation.new(invitation_param)
     if @invitation.save
-      AppMailer.send_invitation_email(@invitation).deliver
+      InviteMailer.perform_async(@invitation.id)
       flash[:success] = "An email has been sent to #{@invitation.recipient_name}. Who else would you like to invite to MyFlix?"
       redirect_to new_invitation_path
     else

@@ -14,7 +14,7 @@ def create
       invitation.inviter.follow(@user)
       invitation.generate_token
     end
-    AppMailer.send_welcome_email(@user).deliver
+    WelcomeMailer.perform_async(@user.id)
     flash[:notice] = "#{@user.username} is now registered with MyFlix!"
     session[:user_id] = @user.id
     redirect_to home_path

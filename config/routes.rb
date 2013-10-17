@@ -1,4 +1,6 @@
 Myflix::Application.routes.draw do
+  require 'sidekiq/web'
+
   root to: 'sessions#index'
 
   resources :sessions, only: [:index]
@@ -35,6 +37,8 @@ Myflix::Application.routes.draw do
   get 'expired_token', to: 'password_resets#expired_token'
 
   resources :invitations, only: [:new, :create]
+
+  mount Sidekiq::Web, at: '/sidekiq'
 
   get 'ui(/:action)', controller: 'ui'
 end

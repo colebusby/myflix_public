@@ -11,11 +11,15 @@ gem 'bootstrap_form'
 gem 'fabrication'
 gem 'faker'
 gem 'figaro'
+gem 'sidekiq'
+gem 'sinatra', '>= 1.3.0', :require => nil
 ruby '1.9.3'
 
 group :production do
   gem 'pg'
   gem 'rails_12factor'
+  gem 'unicorn'
+
 end
 
 gem 'jquery-rails'
