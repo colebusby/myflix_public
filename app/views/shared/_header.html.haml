@@ -17,6 +17,7 @@
             %b.caret
           %ul.dropdown-menu(role="menu" aria-labelledby="dlabel")
             %li
+              =link_to "Add Video", new_admin_video_path if current_user.admin
               =link_to "Invite", new_invitation_path
               =link_to "Account", user_path(current_user.id)
               %a(href="#") Plan and Billing

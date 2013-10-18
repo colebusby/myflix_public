@@ -31,4 +31,8 @@ module ApplicationHelper
     reviewer = User.find(review.user_id)
     link_to "by #{reviewer.username}", user_path(reviewer.id)
   end
+
+  def admin?
+    !!current_user.admin
+  end
 end
