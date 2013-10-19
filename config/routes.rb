@@ -42,7 +42,6 @@ Myflix::Application.routes.draw do
 
   #
   # Actors
-
   #
 
   namespace :admin do
