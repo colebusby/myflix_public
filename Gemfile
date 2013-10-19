@@ -13,6 +13,8 @@ gem 'faker'
 gem 'figaro'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
+gem 'carrierwave'
+gem 'mini_magick', :git => 'git://github.com/minimagick/minimagick.git', :ref => '6d0f8f953112cce6324a524d76c7e126ee14f392'
 ruby '1.9.3'
 
 group :production do

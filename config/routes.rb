@@ -40,6 +40,8 @@ Myflix::Application.routes.draw do
 
   mount Sidekiq::Web, at: '/sidekiq'
 
+  get 'ui(/:action)', controller: 'ui'
+
   ##
   # Actors
   ##
@@ -47,6 +49,4 @@ Myflix::Application.routes.draw do
   namespace :admin do
     resources :videos, only: [:new, :create]
   end
-
-  get 'ui(/:action)', controller: 'ui'
 end
