@@ -3,6 +3,10 @@ class Video < ActiveRecord::Base
   has_many :categories, through: :categorizations
   has_many :reviews
 
+  mount_uploader :large_cover, LargeCoverUploader
+  mount_uploader :small_cover, SmallCoverUploader
+
+
   validates :title, presence: true
   validates :description, presence: true
 
