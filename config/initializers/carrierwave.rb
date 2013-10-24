@@ -8,7 +8,7 @@ CarrierWave.configure do |config|
     }
     config.fog_directory  = ENV['MYFLIX_BUCKET']                     # required
   else
-    config.storage :file
+    config.storage = :file
     config.enable_processing = Rails.env.development?
   end
 end

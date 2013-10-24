@@ -17,10 +17,10 @@ end
 
 # Feature Spec Helpers
 
-def sign_in_with_authenticated_user
-  User.create(email: 'lisa@fakemail.com', username: 'Lisa', password: 'password')
+def sign_in(a_user=nil)
+  user = a_user || Fabricate(:user)
   visit signin_path
-  fill_in 'Email Address', :with =>'lisa@fakemail.com'
-  fill_in 'Password', :with => 'password'
+  fill_in 'Email Address', with: user.email
+  fill_in 'Password', with: user.password
   click_button 'Sign in'
 end
