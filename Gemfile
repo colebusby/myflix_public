@@ -16,6 +16,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'carrierwave'
 gem 'mini_magick', '3.4.0'
 gem "fog", "~> 1.3.1"
+gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 ruby '1.9.3'
 
 group :production do
