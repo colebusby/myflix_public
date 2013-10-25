@@ -1,40 +1,92 @@
 require 'spec_helper'
 
 describe Admin::VideosController do
-  describe "GET new" do
-    context "with authenticated admin" do
 
-      it "renders admin video page" do
+  describe "GET new" do
+    it_behaves_like "require_sign_in" do
+      let(:action) { get :new }
+    end
+
+    it_behaves_like "require_admin" do
+      let(:action) { get :new }
+    end
+
+    it "renders admin video page" do
+      session[:user_id] = Fabricate(:user, admin: true).id
+      get :new
+      expect(response).to render_template :new
+    end
+
+    it "sets @video to new video" do
+      session[:user_id] = Fabricate(:user, admin: true).id
+      get :new
+      expect(assigns(:video)).to be_instance_of Video
+      expect(assigns(:video)).to be_new_record
+    end
+  end
+
+  describe "POST create" do
+    it_behaves_like "require_sign_in" do
+      let(:action) { post :create }
+    end
+
+    it_behaves_like "require_admin" do
+      let(:action) { post :create }
+    end
+
+    context "with valid input" do
+
+      it "redirects to new video page" do
         session[:user_id] = Fabricate(:user, admin: true).id
-        get :new
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {title: "Simpsons", category_ids: ["1"], description: "old cartoon"}
+        expect(response).to redirect_to new_admin_video_path
+      end
+
+      it "creates new video" do
+        session[:user_id] = Fabricate(:user, admin: true).id
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {title: "Simpsons", category_ids: ["1"], description: "old cartoon"}
+        expect(cartoon.videos.count).to eq(1)
+      end
+
+      it "sets success flash message" do
+        session[:user_id] = Fabricate(:user, admin: true).id
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {title: "Simpsons", category_ids: ["1"], description: "old cartoon"}
+        expect(flash[:success]).to eq("Simpsons successfully added.")
+      end
+
+    end
+
+    context "with invalid input" do
+
+      it "does not create a video" do
+        session[:user_id] = Fabricate(:user, admin: true).id
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {category_ids: ["1"], description: "old cartoon"}
+        expect(cartoon.videos.count).to eq(0)
+      end
+
+      it "renders the new template" do
+        session[:user_id] = Fabricate(:user, admin: true).id
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {category_ids: ["1"], description: "old cartoon"}
         expect(response).to render_template :new
       end
 
-    end
-    context "with authenticated user that is not an admin" do
-
-      it "redirects to user video page" do
-        session[:user_id] = Fabricate(:user)
-        get :new
-        expect(response).to redirect_to home_path
+      it "sets the @video variable" do
+        session[:user_id] = Fabricate(:user, admin: true).id
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {category_ids: ["1"], description: "old cartoon"}
+        expect(assigns(:video)).to be_present
       end
 
-      it "sets error message" do
-        session[:user_id] = Fabricate(:user)
-        get :new
-        expect(flash[:error]).to eq("You do not have access.")
-      end
-    end
-    context "with unauthenticated user" do
-
-      it "redirects to user sign in" do
-        get :new
-        expect(response).to redirect_to signin_path
-      end
-
-      it "sets info message" do
-        get :new
-        expect(flash[:info]).to have_content
+      it "sets the flash error message" do
+        session[:user_id] = Fabricate(:user, admin: true).id
+        cartoon = Fabricate(:category, name: "Cartoon")
+        post :create, video: {category_ids: ["1"], description: "old cartoon"}
+        expect(flash[:error]).to be_present
       end
     end
   end

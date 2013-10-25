@@ -8,7 +8,7 @@ feature 'user follows another user' do
     continuum = Fabricate(:video, title: 'Continuum', categories: [action])
     johns_review = Fabricate(:review, user: john, video: continuum)
 
-    sign_in_with_authenticated_user
+    sign_in
     visit home_path
     click_link 'Videos'
     expect(page).to have_content 'Action'

@@ -11,3 +11,17 @@ shared_examples "generates_token" do
     expect(object.token).to be_present
   end
 end
+
+shared_examples "require_admin" do
+  it "redirects to user video page" do
+    session[:user_id] = Fabricate(:user)
+    action
+    expect(response).to redirect_to home_path
+  end
+
+  it "sets error message" do
+    session[:user_id] = Fabricate(:user)
+    action
+    expect(flash[:error]).to eq("You do not have access.")
+  end
+end
