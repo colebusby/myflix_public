@@ -5,6 +5,7 @@ CarrierWave.configure do |config|
       :provider               => 'AWS',                        # required
       :aws_access_key_id      => ENV['S3_KEY'],                        # required
       :aws_secret_access_key  => ENV['S3_SECRET'],                        # required
+      :region                 => 's3-us-west-2',
     }
     # config.fog_directory  = ENV['MYFLIX_BUCKET']
     config.fog_directory  = 'name_of_directory'                         # required
@@ -14,4 +15,3 @@ CarrierWave.configure do |config|
   end
 end
 
-'name_of_directory'
