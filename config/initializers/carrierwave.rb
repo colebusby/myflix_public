@@ -7,8 +7,8 @@ CarrierWave.configure do |config|
       :aws_secret_access_key  => ENV['S3_SECRET'],                        # required
       :region                 => 's3-us-west-2',
     }
-    # config.fog_directory  = ENV['MYFLIX_BUCKET']
-    config.fog_directory  = 'name_of_directory'                         # required
+    config.fog_directory  = ENV['MYFLIX_BUCKET']
+                         # required
   else
     config.storage = :file
     config.enable_processing = Rails.env.development?
