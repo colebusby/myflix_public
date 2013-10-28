@@ -52,14 +52,10 @@ class UsersController < ApplicationController
   end
 
   def charge_card
-    # Amount in cents
-    amount = 999
-    token = params[:stripeToken]
     Stripe.api_key = ENV['STRIPE_SECRET_KEY']
-
-    charge = Stripe::Charge.create(
-      card:        token,
-      amount:      amount,
+    StripeWrapper::Charge.create(
+      card:        params[:stripeToken],
+      amount:      999,
       currency:    'usd'
     )
   end

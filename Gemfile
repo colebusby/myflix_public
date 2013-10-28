@@ -41,6 +41,8 @@ group :test, :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
+  gem 'vcr'
+  gem 'webmock', '1.11.0'
 end
 
 group :test do
