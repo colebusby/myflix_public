@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Video do
   it "saves itself" do
-    video = Video.new(title: "TNMT", description: "Heroes in a half-shell!", small_cover_url: "www.tnmt.com", large_cover_url: "www.imdb.com")
+    video = Video.new(title: "TNMT", description: "Heroes in a half-shell!", small_cover: "www.tnmt.com", large_cover: "www.imdb.com")
     video.save
     Video.find_by(title: "TNMT").title.should == "TNMT"
     Video.find_by(title: "TNMT").description.should == "Heroes in a half-shell!"
