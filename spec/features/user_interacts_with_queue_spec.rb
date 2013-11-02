@@ -9,7 +9,7 @@ feature 'user interacts with queue items' do
     monk = Fabricate(:video, title: 'Monk', categories: [action])
     continuum = Fabricate(:video, title: 'Continuum', categories: [action])
 
-    sign_in_with_authenticated_user
+    sign_in
     visit home_path
     find("a[href='/videos/#{firefly.id}']").click
     expect(page).to have_content firefly.description

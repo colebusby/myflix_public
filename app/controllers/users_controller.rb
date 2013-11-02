@@ -7,13 +7,19 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_param)
-    if @user.save
-      handle_invitation
+    if @user.valid?
       charge_card
-      WelcomeMailer.perform_async(@user.id)
-      flash[:notice] = "#{@user.username} is now registered with MyFlix!"
-      session[:user_id] = @user.id
-      redirect_to home_path
+      if @charge.successful?
+        @user.save
+        handle_invitation
+        WelcomeMailer.perform_async(@user.id)
+        flash[:notice] = "#{@user.username} is now registered with MyFlix!"
+        session[:user_id] = @user.id
+        redirect_to home_path
+      else
+        flash[:error] = @charge.error_message
+        render :new
+      end
     else
       render :new
     end
@@ -53,10 +59,9 @@ class UsersController < ApplicationController
 
   def charge_card
     Stripe.api_key = ENV['STRIPE_SECRET_KEY']
-    StripeWrapper::Charge.create(
+    @charge = StripeWrapper::Charge.create(
       card:        params[:stripeToken],
       amount:      999,
-      currency:    'usd'
     )
   end
 end

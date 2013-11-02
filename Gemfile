@@ -41,12 +41,14 @@ group :test, :development do
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
-  gem 'vcr'
-  gem 'webmock', '1.11.0'
 end
 
 group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'capybara-email'
+  gem 'vcr'
+  gem 'webmock', '1.11.0'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
