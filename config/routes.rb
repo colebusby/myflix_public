@@ -42,11 +42,15 @@ Myflix::Application.routes.draw do
 
   get 'ui(/:action)', controller: 'ui'
 
+  mount StripeEvent::Engine => '/stripe_events'
+
   ##
   # Actors
   ##
 
   namespace :admin do
     resources :videos, only: [:new, :create]
+
+    resources :payments, only: [:index]
   end
 end

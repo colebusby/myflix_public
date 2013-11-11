@@ -3,7 +3,7 @@ require 'spec_helper'
 describe UserSignup do
   describe "#signup" do
     context "valid personal info and valid card" do
-      let(:charge) { double(:charge, successful?: true) }
+      let(:charge) { double(:charge, successful?: true, customer_token: "12345") }
 
       before do
         StripeWrapper::Charge.should_receive(:create).and_return(charge)
@@ -13,6 +13,11 @@ describe UserSignup do
       it "creates user" do
         UserSignup.new(Fabricate.build(:user)).signup("stripe_token", nil)
         expect(User.count).to eq(1)
+      end
+
+      it "stores the customer token from stripe" do
+        UserSignup.new(Fabricate.build(:user)).signup("stripe_token", nil)
+        expect(User.first.customer_token).to eq("12345")
       end
 
       it "makes the user follow the inviter" do
