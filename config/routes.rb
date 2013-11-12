@@ -26,7 +26,9 @@ Myflix::Application.routes.draw do
   post 'signin', to: 'sessions#create'
   get 'signout', to: 'sessions#destroy'
 
-  resources :users, only: [:create, :show]
+  resources :users, only: [:create, :show] do
+    resources :payments, only: [:index]
+  end
   get 'register', to: 'users#new'
   get 'register/:token', to: 'users#new_with_invitation_token', as: 'register_with_token'
 

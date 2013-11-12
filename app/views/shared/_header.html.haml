@@ -23,5 +23,5 @@
                 .divider
               =link_to "Invite", new_invitation_path
               =link_to "Account", user_path(current_user.id)
-              %a(href="#") Plan and Billing
+              =link_to "Plan and Billing", user_payments_path(current_user.id)
               =link_to "Sign Out", signout_path

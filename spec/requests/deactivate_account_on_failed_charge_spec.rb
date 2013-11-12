@@ -3,15 +3,15 @@ require "spec_helper"
 describe "deactivate account on failed charge" do
   let(:event_data) do
     {
-      "id"=> "evt_102vGq2t3wtymrXOczQvS8IR",
-      "created"=> 1384197897,
+      "id"=> "evt_102vIH2t3wtymrXOkrP6ZGNV",
+      "created"=> 1384203225,
       "livemode"=> false,
       "type"=> "charge.failed",
       "data"=> {
         "object"=> {
-          "id"=> "ch_102vGq2t3wtymrXOpi7g70Z2",
+          "id"=> "ch_102vIH2t3wtymrXOtzyR2rMK",
           "object"=> "charge",
-          "created"=> 1384197897,
+          "created"=> 1384203225,
           "livemode"=> false,
           "paid"=> false,
           "amount"=> 999,
@@ -46,20 +46,20 @@ describe "deactivate account on failed charge" do
           "amount_refunded"=> 0,
           "customer"=> "cus_2vFaHQa93CrN7s",
           "invoice"=> nil,
-          "description"=> "Test failed charge",
+          "description"=> "another fail test",
           "dispute"=> nil,
           "metadata"=> {}
         }
       },
       "object"=> "event",
-      "pending_webhooks"=> 2,
-      "request"=> "iar_2vGqvL9PzHEIvw"
+      "pending_webhooks"=> 1,
+      "request"=> "iar_2vIHLYWrH2VhXL"
     }
   end
 
   it "sets user.active to false", :vcr do
     lisa = Fabricate(:user, customer_token: "cus_2vFaHQa93CrN7s")
     post "/stripe_events", event_data
-    expect(lisa).not_to be_active
+    expect(lisa.reload).not_to be_active
   end
 end

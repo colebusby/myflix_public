@@ -39,7 +39,7 @@ group :test, :development do
   gem 'pry-nav'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
-  gem 'better_errors'
+  # gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
 end

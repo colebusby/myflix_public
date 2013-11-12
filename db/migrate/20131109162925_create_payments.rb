@@ -3,6 +3,8 @@ class CreatePayments < ActiveRecord::Migration
     create_table :payments do |t|
       t.integer :user_id, :amount
       t.string :reference_id
+
+      t.timestamps
     end
   end
 end
