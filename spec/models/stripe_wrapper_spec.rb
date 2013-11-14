@@ -22,6 +22,25 @@ describe StripeWrapper do
         expect(response).to be_successful
       end
 
+      it "returns the customer token for a valid card", :vcr do
+        Stripe.api_key = ENV['STRIPE_SECRET_KEY']
+        token = Stripe::Token.create(
+          :card => {
+            :number => "4242424242424242",
+            :exp_month => 10,
+            :exp_year => 2018,
+            :cvc => "314"
+          },
+        ).id
+
+        response = StripeWrapper::Charge.create(
+          amount: 999,
+          card: token
+        )
+
+        expect(response.customer_token).to be_present
+      end
+
       it "makes a card declined charge", :vcr do
         Stripe.api_key = ENV['STRIPE_SECRET_KEY']
         token = Stripe::Token.create(

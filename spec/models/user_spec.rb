@@ -13,4 +13,12 @@ describe User do
   it_behaves_like "generates_token" do
     let(:object) { Fabricate(:user) }
   end
+
+  describe "deactivate! method" do
+    it "sends out a credit card failed email" do
+      lisa = Fabricate(:user, email: "lisa@example.com")
+      lisa.deactivate!
+      expect(ActionMailer::Base.deliveries.last.to).to eq(['lisa@example.com'])
+    end
+  end
 end

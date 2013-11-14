@@ -18,6 +18,7 @@ gem 'mini_magick', '3.4.0'
 gem "fog", "~> 1.3.1"
 gem 'stripe', :git => 'https://github.com/stripe/stripe-ruby'
 gem 'draper'
+gem 'stripe_event'
 ruby '1.9.3'
 
 group :production do
@@ -38,7 +39,7 @@ group :test, :development do
   gem 'pry-nav'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
-  gem 'better_errors'
+  # gem 'better_errors'
   gem 'binding_of_caller'
   gem 'meta_request'
 end

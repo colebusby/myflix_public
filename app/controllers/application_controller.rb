@@ -22,4 +22,15 @@ class ApplicationController < ActionController::Base
     flash[:error] = "You cant do that!"
     redirect_to root_path
   end
+
+  def active?
+    current_user.active
+  end
+
+  def require_active
+    unless active?
+      flash[:error] = "Your account is not currently active."
+      redirect_to user_payments_path(current_user)
+    end
+  end
 end

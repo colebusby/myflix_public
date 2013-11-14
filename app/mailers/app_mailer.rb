@@ -14,4 +14,9 @@ class AppMailer < ActionMailer::Base
     @invitation = invitation
     mail(to: invitation.recipient_email, from: "info@myflix.com", subject: "#{invitation.inviter.username} has sent you a MyFlix invite!")
   end
+
+  def send_charge_failed_email(user)
+    @user = user
+    mail(to: user.email, from: "info@myflix.com", subject: "Credit Card Charge Failed!")
+  end
 end

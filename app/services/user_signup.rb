@@ -10,6 +10,7 @@ class UserSignup
     if @user.valid?
       charge_card(stripe_token)
       if @charge.successful?
+        @user.customer_token = @charge.customer_token
         @user.save
         handle_invitation(invitation_token)
         WelcomeMailer.perform_async(@user.id)
@@ -37,7 +38,8 @@ class UserSignup
     Stripe.api_key = ENV['STRIPE_SECRET_KEY']
     @charge = StripeWrapper::Charge.create(
       card:        stripe_token,
-      amount:      999,
+      email:       @user.email,
+      description: "#{@user.username}'s enrollment charge."
     )
   end
 

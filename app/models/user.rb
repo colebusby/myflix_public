@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   include Tokenable
 
   has_many :reviews
+  has_many :payments
   has_many :queue_items, order: :position
   has_many :following_relationships, class_name: "Relationship", foreign_key: :follower_id
   has_many :leading_relationships, class_name: "Relationship", foreign_key: :leader_id
@@ -39,4 +40,13 @@ class User < ActiveRecord::Base
     Relationship.create(leader: leader, follower: self)
   end
 
+  def deactivate!
+    update_attribute(:active, false)
+    ChargeFailedMailer.perform_async(self.id)
+  end
+
+  def next_bill
+    datetime = self.payments.last.created_at + 1.month
+    datetime.strftime("%m/%d/%Y")
+  end
 end
