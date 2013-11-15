@@ -28,6 +28,7 @@ Myflix::Application.routes.draw do
 
   resources :users, only: [:create, :show] do
     resources :payments, only: [:index]
+    post 'update_card', to: 'payments#update_card'
   end
   get 'register', to: 'users#new'
   get 'register/:token', to: 'users#new_with_invitation_token', as: 'register_with_token'

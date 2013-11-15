@@ -9,8 +9,8 @@ class UserSignup
   def signup(stripe_token, invitation_token)
     if @user.valid?
       charge_card(stripe_token)
-      if @charge.successful?
-        @user.customer_token = @charge.customer_token
+      if @customer_create.successful?
+        @user.customer_token = @customer_create.customer_token
         @user.save
         handle_invitation(invitation_token)
         WelcomeMailer.perform_async(@user.id)
@@ -18,7 +18,7 @@ class UserSignup
         self
       else
         @status = :failed
-        @error_message = @charge.error_message
+        @error_message = @customer_create.error_message
         self
       end
     else
@@ -35,8 +35,7 @@ class UserSignup
   private
 
   def charge_card(stripe_token)
-    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
-    @charge = StripeWrapper::Charge.create(
+    @customer_create = StripeWrapper::Customer.create(
       card:        stripe_token,
       email:       @user.email,
       description: "#{@user.username}'s enrollment charge."
