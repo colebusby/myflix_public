@@ -19,4 +19,12 @@ class PaymentsController < ApplicationController
       redirect_to user_payments_path
     end
   end
+
+  def cancel_subscription
+    user = User.find_by(params[:user])
+    StripeWrapper::Customer.cancel(user.customer_token)
+    user.update_attribute(:active, false)
+    flash[:notice] = "Your subscription has been canceled"
+    redirect_to user_payments_path
+  end
 end

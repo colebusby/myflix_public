@@ -24,7 +24,7 @@ Stripe.setPublishableKey("#{ENV['STRIPE_PUBLISHABLE_KEY']}");
                 %td The All You Can Watch Plan
                 %td= @user.next_bill
                 %td 9.99 per month
-        = button_to "Cancel Service", nil, class: "btn"
+        = button_to "Cancel Service", user_cancel_subscription_path, class: "btn"
 
         %section.credit_card_update
           %header

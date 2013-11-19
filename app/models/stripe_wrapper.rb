@@ -52,13 +52,19 @@ module StripeWrapper
 
     def self.update(options={})
       begin
-        update = Stripe::Customer.retrieve(options[:customer_token])
-        update.card = options[:card]
-        response = update.save
+        customer = Stripe::Customer.retrieve(options[:customer_token])
+        customer.card = options[:card]
+        customer.update_subscription(:plan => "Monthly Streaming Plan")
+        response = customer.save
         new(response: response)
       rescue Stripe::CardError => e
         new(error_message: e.message)
       end
+    end
+
+    def self.cancel(customer_token)
+      customer = Stripe::Customer.retrieve(customer_token)
+      customer.cancel_subscription
     end
 
     def successful?

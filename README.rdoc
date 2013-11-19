@@ -59,7 +59,9 @@ Rails Application Concepts and Practices(list taken from www.gotealeaf.com)
   Beyond MVC
 
 Production Considerations
-  Config variables stored on Heroku instead of Github to keep secret keys secret. Unicorn utilized for background jobs to maintain site speed. All sensetive data, like passwords and credit card information, handled in secure manners.
+  Config variables stored on Heroku instead of Github to keep secret keys secret.
+  Unicorn utilized for background jobs to maintain site speed.
+  All sensetive data, like passwords and credit card information, handled in secure manners.
 
 Workflows
   Complex registration that validates both registration data as well as credit card data simultaneously.
