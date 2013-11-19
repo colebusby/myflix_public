@@ -11,6 +11,10 @@ class Video < ActiveRecord::Base
   validates :description, presence: true
 
   def self.search_by_title(search_term)
-    where("title like :search", search: "%#{search_term}%")
+    if Rails.env.production?
+      where("title ilike :search", search: "%#{search_term}%")
+    else
+      where("title like :search", search: "%#{search_term}%")
+    end
   end
 end

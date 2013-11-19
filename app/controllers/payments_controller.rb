@@ -1,4 +1,6 @@
 class PaymentsController < ApplicationController
+  before_action :require_user
+
   def index
     @user = User.find_by(params[:user])
     @payments = current_user.payments
