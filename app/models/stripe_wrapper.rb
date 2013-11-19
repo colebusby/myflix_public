@@ -54,7 +54,7 @@ module StripeWrapper
       begin
         customer = Stripe::Customer.retrieve(options[:customer_token])
         customer.card = options[:card]
-        customer.update_subscription(:plan => "Monthly Streaming Plan")
+        customer.update_subscription(:plan => "basic")
         response = customer.save
         new(response: response)
       rescue Stripe::CardError => e
